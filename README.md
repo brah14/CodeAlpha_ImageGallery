@@ -39,7 +39,8 @@ Categories and filter buttons are generated automatically from the data.
 
 ## Live Demo
 
-Add your GitHub Pages or Netlify link here.
+https://codealphaimagegallery-three.vercel.app
+GitHub: https://github.com/brah14/CodeAlpha_ImageGallery.git
 
 ## Screenshots
 
