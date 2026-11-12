@@ -45,7 +45,11 @@ Add your GitHub Pages or Netlify link here.
 
 ### Mobile view
 
-<img src="mobile-preview-Image%20gallery.png" alt="Mobile view of Huno's Image Gallery showing filters, search, and Ghanaian landmark photos" width="360">
+<img src="screenshots/mobile-preview.png" alt="Mobile view of Huno's Image Gallery showing filters, search, and Ghanaian landmark photos" width="360">
+
+### Desktop view
+
+<img src="screenshots/desktop-preview.png" alt="Desktop view of Huno's Image Gallery showing its responsive image grid" width="900">
 
 ## Author
 
