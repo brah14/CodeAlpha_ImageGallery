@@ -1,37 +1,16 @@
 /* ---------- Image data ----------
-   Placeholder photos from picsum.photos so the project works out of the box.
-   To use your own images, put them in an "images" folder and replace the
-   entries below, e.g.:
-   { title: "Labadi Beach", category: "Beach", src: "images/labadi.jpg", thumb: "images/labadi.jpg" }
+   Ghana tourist-site photos are stored locally in /images.
+   See README.md for source and licence credits.
 */
-function photo(id, title, category) {
-  return {
-    title,
-    category,
-    src: `https://picsum.photos/id/${id}/1600/1000`,
-    thumb: `https://picsum.photos/id/${id}/600/450`,
-  };
-}
-
 const IMAGES = [
-  photo(10, "Quiet Forest", "Nature"),
-  photo(11, "Open Landscape", "Nature"),
-  photo(15, "Cascade", "Nature"),
-  photo(17, "Forest Road", "Nature"),
-  photo(18, "Green Fields", "Nature"),
-  photo(19, "Golden Meadow", "Nature"),
-  photo(28, "Deep Woods", "Nature"),
-  photo(12, "Shoreline", "Water"),
-  photo(13, "Rocky Coast", "Water"),
-  photo(14, "Calm Sea", "Water"),
-  photo(16, "Ocean View", "Water"),
-  photo(25, "Mountain Pass", "Mountains"),
-  photo(27, "High Peaks", "Mountains"),
-  photo(29, "Snowy Ridge", "Mountains"),
-  photo(20, "Work Desk", "Objects"),
-  photo(24, "Open Book", "Objects"),
-  photo(26, "Everyday Carry", "Objects"),
-  photo(23, "Table Setting", "Objects"),
+  { title: "Cape Coast Castle", category: "Heritage", src: "images/cape-coast-castle.jpg", thumb: "images/cape-coast-castle.jpg" },
+  { title: "Kakum Canopy Walk", category: "Nature", src: "images/kakum-canopy-walk.jpg", thumb: "images/kakum-canopy-walk.jpg" },
+  { title: "Wli Waterfalls", category: "Nature", src: "images/wli-waterfalls.jpg", thumb: "images/wli-waterfalls.jpg" },
+  { title: "Nzulezu Stilt Village", category: "Heritage", src: "images/nzulezu.jpg", thumb: "images/nzulezu.jpg" },
+  { title: "Independence Arch", category: "Landmarks", src: "images/independence-arch.jpg", thumb: "images/independence-arch.jpg" },
+  { title: "Mole National Park", category: "Nature", src: "images/mole-national-park.jpg", thumb: "images/mole-national-park.jpg" },
+  { title: "Larabanga Mosque", category: "Heritage", src: "images/larabanga-mosque.jpg", thumb: "images/larabanga-mosque.jpg" },
+  { title: "Boti Falls", category: "Nature", src: "images/boti-falls.jpg", thumb: "images/boti-falls.jpg" },
 ];
 
 /* ---------- Elements ---------- */
@@ -109,6 +88,7 @@ function matches(img) {
 function render() {
   visible = IMAGES.filter(matches);
   galleryEl.innerHTML = "";
+  const fragment = document.createDocumentFragment();
 
   visible.forEach((item, index) => {
     const li = document.createElement("li");
@@ -136,8 +116,10 @@ function render() {
     button.addEventListener("click", () => openLightbox(index));
 
     li.appendChild(button);
-    galleryEl.appendChild(li);
+    fragment.appendChild(li);
   });
+
+  galleryEl.appendChild(fragment);
 
   emptyEl.hidden = visible.length > 0;
   countEl.textContent = `Showing ${visible.length} of ${IMAGES.length} images`;
@@ -148,6 +130,10 @@ function render() {
 function showImage() {
   const item = visible[currentIndex];
   if (!item) return;
+
+  const hasMultipleImages = visible.length > 1;
+  lbPrev.disabled = !hasMultipleImages;
+  lbNext.disabled = !hasMultipleImages;
 
   const token = ++loadToken;
   lbImg.classList.add("fading");
@@ -161,6 +147,7 @@ function showImage() {
   };
   loader.onerror = () => {
     if (token !== loadToken) return;
+    lbImg.removeAttribute("src");
     lbImg.alt = `${item.title} (failed to load)`;
     lbImg.classList.remove("fading");
   };
@@ -198,7 +185,7 @@ function closeLightbox() {
 }
 
 function step(direction) {
-  if (!visible.length) return;
+  if (visible.length < 2) return;
   currentIndex = (currentIndex + direction + visible.length) % visible.length;
   showImage();
 }
@@ -217,13 +204,16 @@ document.addEventListener("keydown", (event) => {
   if (!lightbox.classList.contains("open")) return;
 
   if (event.key === "Escape") {
+    event.preventDefault();
     closeLightbox();
   } else if (event.key === "ArrowRight") {
+    event.preventDefault();
     step(1);
   } else if (event.key === "ArrowLeft") {
+    event.preventDefault();
     step(-1);
   } else if (event.key === "Tab") {
-    const focusable = [lbClose, lbPrev, lbNext];
+    const focusable = [lbClose, lbPrev, lbNext].filter((button) => !button.disabled);
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
     if (event.shiftKey && document.activeElement === first) {
